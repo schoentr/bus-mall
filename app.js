@@ -1,18 +1,21 @@
 'use strict';
-var newPicturesUsed=0;
+// var newPicturesUsed=0;
 var picturesUsed=[1,2,3,4,5,6];
-// access the img element from the DOM
-Item.imgElement = document.getElementById('item-pic-one');
-// Item.imgElement = document.getElementById('item-pic-two');
-// Item.imgElement = document.getElementById('item-pic-three');
 
-// store our goats in an array
+// access the img element from the DOM
+Item.imgLeftElement = document.getElementById('img-left');
+Item.imgCenterElement = document.getElementById('img-center');
+Item.imgRightElement= document.getElementById('img-right');
+
+// store our items in an array
 Item.allItems = [];
 
 // constructor function to make item instances
 function Item(filepath, description) {
-  this.url = filepath;
+  this.filepath = filepath;
   this.altText = description;
+  this.numberClicked =0;
+  this.numberDisplayed =0;
   Item.allItems.push(this);
 }
 
@@ -40,83 +43,76 @@ new Item('img/wine-glass.jpg', 'breakfast');
 
 
 Item.randomNum = function() {
-  // randomly generate a number
   var random = Math.random() * Item.allItems.length;
   var roundedDown = Math.floor(random);
-
   return roundedDown;
 };
 
-Item.renderItem = function() {
-
-console.log(picturesUsed);
-
-  var random1 = Item.randomNum();
-  var isPictureUsed = false;
-  
-  // console.log(random1);
-  // console.log(picturesUsed.length);
-  do{
-    random1 = Item.randomNum();
-    console.log(random1+':Random Number')
-    for (var i = 0; i < picturesUsed.length; i++){
-      if (picturesUsed[i]===random1){
-        isPictureUsed=true;
-         console.log('!!!!!' +isPictureUsed);
-    
-      }
-    }
-    if (isPictureUsed === false){
-      console.log('!!!!!!!'+ isPictureUsed);
-      console.log(picturesUsed);
-      picturesUsed.unshift(random1)
+Item.dispayArray = function() {
+  var newPicturesUsed=0;
+  while(newPicturesUsed < 3){
+   var random1 = Item.randomNum();
+    if (picturesUsed.includes(random1)===false){
+      picturesUsed.unshift(random1);
       picturesUsed.pop();
-      newPicturesUsed++;
-      console.log('*****'+newPicturesUsed);
-
+      newPicturesUsed++
     }
-  //   console.log(picturesUsed);
-  //  console.log(newPictureUsed);
-  }while(newPicturesUsed < 2);
-
-
-  var randomItem = Item.allItems[random1];
-  // console.log(random1);
-
-  Item.imgElement.alt = randomItem.altText;
-  Item.imgElement.src = randomItem.url;
-};
-
-// render a random goat on page load
-Item.renderItem();
-// Item2.renderItem();
-// Item3.renderItem();
-// listen to the img element
-Item1.imgElement.addEventListener('click', Item.renderItem);
+  }
+ return picturesUsed;
+} 
 
 
 
 
+Item.render = function(){
+  var newPicturesUsed=0;
+  while(newPicturesUsed < 3){
+   var random1 = Item.randomNum();
+    if (picturesUsed.includes(random1)===false){
+      picturesUsed.unshift(random1);
+      picturesUsed.pop();
+      newPicturesUsed++
+    }
+  }
+  var rightIndex=picturesUsed[2];
+  var  centerIndex=picturesUsed[1]
+  var leftIndex=picturesUsed[0];
+  var pictureLeft =Item.allItems[leftIndex];
+  var pictureRight=Item.allItems[rightIndex];
+  var pictureCenter=Item.allItems[centerIndex];
+  pictureLeft.numberDisplayed++;
+  pictureRight.numberDisplayed++;
+  pictureCenter.numberDisplayed++;
+  Item.imgLeftElement.src=pictureLeft.filepath;
+  Item.imgLeftElement.alt=pictureLeft.altText;
+  Item.imgCenterElement.src=pictureCenter.filepath;
+  Item.imgCenterElement.alt=pictureCenter.altText;
+  Item.imgRightElement.src=pictureRight.filepath;
+  Item.imgRightElement.alt=pictureRight.altText;
+}
+
+Item.render();
+
+Item.clickRight = function(event){
+  var rightIndex=picturesUsed[2];
+  Item.allItems[rightIndex].numberClicked++;
+  // alert(Item.allItems[rightIndex].numberClicked++);
+  Item.render();
+}
+Item.clickLeft = function(event){
+  var leftIndex=picturesUsed[0];
+  Item.allItems[leftIndex].numberClicked++;
+  // alert(Item.allItems[leftIndex].numberClicked++);
+  Item.render();
+}
+Item.clickCenter = function(event){
+  var centerIndex=picturesUsed[1];
+  Item.allItems[centerIndex].numberClicked++;
+  // alert(Item.allItems[centerIndex].numberClicked++);
+  Item.render();
+}
 
 
-
-
-
-
-
-
-
-// 'use strict'
-// var picturesUsed=[34,25,25,24,6,55,7,3,3];
-
-
-// var randomNum = function() {
-//   // randomly generate a number
-//   var random = Math.random() * picures.length;
-//   var roundedDown = Math.floor(random);
-//   return roundedDown;
-// };
-
-
-// render = function() {
-// 
+Item.imgRightElement.addEventListener('click', Item.clickRight);
+Item.imgLeftElement.addEventListener('click', Item.clickLeft);
+Item.imgCenterElement.addEventListener('click', Item.clickCenter);
