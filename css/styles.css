@@ -1,0 +1,60 @@
+header{
+  position: relative;
+}
+header img{
+  margin:10px;
+}
+#title{
+  font-size: 30px;
+  position: absolute;
+  display:inline;
+  /* left:100px;
+  top: 10px;   */
+}
+header nav{
+  margin-right:30px;
+
+  float: right;
+}
+nav li{
+  display:inline-block;
+  border:1px black solid;
+  padding:10px;
+  margin-top:50px;
+}
+#tally-box{
+  border:1px black solid;
+  display:inline-block; 
+  height:400px;
+  width: 180px;
+}
+main{
+  position: relative;
+
+}
+main img{
+  height: 230px;
+}
+#img-box{
+  display:inline-block;
+  /* margin: 0 auto; */
+  border:4px black solid;
+  position: relative;
+}
+#img-left{
+  position: absolute;
+  top:30px;
+  left:30px;
+}
+#img-center{
+  position: absolute;
+  top:30px;
+  left:400px;
+}
+#img-right{
+  position: absolute;
+  top:30px;
+  left:800px;
+
+}
+
