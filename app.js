@@ -161,7 +161,6 @@ Item.clickCenter = function(event){ //eslint-disable-line
   if(globalClickCounter<25){
     Item.render();
   }else{
-    
     Item.voteTable.textContent='';
     Item.updateVotes();
     Item.displayChart();
