@@ -6,11 +6,14 @@ var picturesUsed=[1,2,3,4,5,6];
 Item.imgLeftElement = document.getElementById('img-left');
 Item.imgCenterElement = document.getElementById('img-center');
 Item.imgRightElement= document.getElementById('img-right');
-var voteTable=document.getElementById('tally-box');
+Item.resultsChart = document.getElementById('results-chart');
+Item.voteTable=document.getElementById('tally-box');
 
 // store our items in an array
+Item.allAltText=[];
 Item.allItems = [];
 Item.totalVotes =[];
+
 // constructor function to make item instances
 function Item(filepath, description) {
   this.filepath = filepath;
@@ -18,10 +21,9 @@ function Item(filepath, description) {
   this.numberClicked =0;
   this.numberDisplayed =0;
   Item.allItems.push(this);
+  Item.allAltText.push(this.altText);
 }
-
-
-// Item -instances
+// *******************************         Item -instances
 new Item('img/bag.jpg', 'bag');
 new Item('img/banana.jpg', 'banana');
 new Item('img/bathroom.jpg', 'bathroom stand');
@@ -53,6 +55,7 @@ Item.randomNum = function() {
 Item.updateVotes =function(){
   for (var i=0; i < Item.allItems.length; i++){
     Item.totalVotes[i]= Item.allItems[i].numberClicked;
+    console.log(i);
   }
 
 };
@@ -71,8 +74,8 @@ Item.dispayArray = function() {
   }
 };
 
-//Creating Table
-Item.renderChart= function(){
+//Creating  Table Displayed while clicking
+Item.renderTable= function(){
   for(var i = 0; i < Item.allItems.length; i++){
     var trElement = document.createElement('tr');
     var tdElement =document.createElement('td');
@@ -86,7 +89,7 @@ Item.renderChart= function(){
     tdElement.textContent= 'and selected '+ Item.allItems[i].numberClicked + '.';
     trElement.appendChild(tdElement);
 
-    voteTable.appendChild(trElement);
+    Item.voteTable.appendChild(trElement);
 
   }
 };
@@ -119,23 +122,26 @@ Item.render = function(){
   Item.imgRightElement.src=pictureRight.filepath;
   Item.imgRightElement.alt=pictureRight.altText;
   // alert('about render Chart');
-  voteTable.textContent='';
-  Item.renderChart();
+  Item.voteTable.textContent='';
+  Item.renderTable();
+
 };
 
 
 
-Item.clickRight = function(event){
+Item.clickRight = function(event){ //eslint-disable-line
   var rightIndex=picturesUsed[2];
   Item.allItems[rightIndex].numberClicked++;
   globalClickCounter++;
   if(globalClickCounter<25){
     Item.render();
   }else{
-    alert('You have clicked 10 times');
+    Item.voteTable.textContent='';
+    Item.updateVotes();
+    Item.displayChart();
   }
 };
-Item.clickLeft = function(event){
+Item.clickLeft = function(event){ //eslint-disable-line
   var leftIndex=picturesUsed[0];
   Item.allItems[leftIndex].numberClicked++;
   globalClickCounter++;
@@ -143,18 +149,22 @@ Item.clickLeft = function(event){
   if(globalClickCounter<25){
     Item.render();
   }else{
-    alert('You have clicked 10 times');
+    Item.voteTable.textContent='';
+    Item.updateVotes();
+    Item.displayChart();
   }
-
 };
-Item.clickCenter = function(event){
+Item.clickCenter = function(event){ //eslint-disable-line
   var centerIndex=picturesUsed[1];
   Item.allItems[centerIndex].numberClicked++;
   globalClickCounter++;
   if(globalClickCounter<25){
     Item.render();
   }else{
-    alert('You have clicked 10 times');
+    
+    Item.voteTable.textContent='';
+    Item.updateVotes();
+    Item.displayChart();
   }
 };
 Item.render();
@@ -163,3 +173,28 @@ Item.imgRightElement.addEventListener('click', Item.clickRight);
 Item.imgLeftElement.addEventListener('click', Item.clickLeft);
 Item.imgCenterElement.addEventListener('click', Item.clickCenter);
 
+Item.displayChart = function(){
+  new Chart(Item.resultsChart,{//eslint-disable-line
+    type: 'bar',
+    data: {
+      labels:Item.allAltText,
+      datasets:[{
+        label:'Number of votes',
+        data:Item.totalVotes,
+        backgroundColor:['#145d1c','#92f83b','#a54c3b','#ce9339','#0571e1','#d357af','#e6c940','#4df1ec,','#784268','#6dd448','#1b3b0f','#faeb48','#a37747','#aac25d','#f8ddf5','#fea04a','#EBE616', '#02D7B9', '#BE6AD9', '#78D01F', '#2FCE05'],
+        borderColor:[],
+        borderWidth:0
+      }]
+    },
+    options:{
+      scales:{
+        yAxes:[{
+          ticks:{
+            stepsize:1,
+            beginAtZero:true
+          }
+        }]
+      }
+    }
+  });
+};
