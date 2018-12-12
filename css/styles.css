@@ -1,4 +1,6 @@
+
 header{
+  /* width:850px; */
   position: relative;
 }
 header img{
@@ -24,21 +26,29 @@ nav li{
 }
 #tally-box{
   border:1px black solid;
-  display:inline-block; 
+  /* display:inline-block;  */
   height:400px;
-  width: 180px;
+ 
 }
 main{
+  height:300px;
   position: relative;
-
+  border:4px black solid;
+  background-color: aqua;
+   /* width:; */
 }
 main img{
-  height: 230px;
+  /* width: 230px; */
+  height:250px;
+}
+#table-sec{
+  display:block;
+  
 }
 #img-box{
-  display:inline-block;
-  /* margin: 0 auto; */
-  border:4px black solid;
+  display:block;
+  height:300px;
+  margin: 0 auto;
   position: relative;
 }
 #img-left{
@@ -49,12 +59,14 @@ main img{
 #img-center{
   position: absolute;
   top:30px;
-  left:400px;
+  left:300px;
 }
 #img-right{
   position: absolute;
   top:30px;
-  left:800px;
-
+  left:600px;
 }
 
+table{
+  /* width:100%; */
+}
