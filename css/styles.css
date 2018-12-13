@@ -43,7 +43,7 @@ header img{
   width:25%;
   display:inline-block;
   height: 400px;
-  border: yellow 1px solid;
+  /* border: yellow 1px solid; */
 }
 #title{
   padding-top: 35px;
