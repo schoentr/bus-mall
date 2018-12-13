@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Bus Mall !!!</title>
+    <title>Bus Mall - Product Survey</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/styles.css">
   </head>
@@ -21,23 +21,31 @@
         </nav>
     </header>
     <main>
-     
-      
-      <section id="img-box">
-        <img id="img-left" src="" alt="">
-        <img id="img-center" src="" alt="">
-        <img id="img-right" src="" alt="">
+      <section id="intro-section">
+        <h2>New Product Survey</h2>
+        <p> Thank-you for participation in Bus-Mall's new product survey.  You will be given three images at one time.  Please select the one you might by or the one you are most interested in.</p> 
       </section>
-       <section id="table-sec">
-        <table id="tally-box"></table>
+      <section id="img-section">
+        <span class="image-span">
+          <img id="img-left" class="image" src="" alt="">
+        </span>
+        <span class="image-span">
+          <img id="img-center" class="image" src="" alt="">
+        </span>
+        <span class="image-span">
+          <img id="img-right" class="image" src="" alt=""> 
+        </span>
       </section>
+      <section id="results-section" >
+        <h3>Results:</h3>
+        <section id="results-list">
+          <ul></ul>
+      </section></section>
+        
       <section>
         <canvas id="results-chart"></canvas>
       </section>
-
-      </main>
-    <h1></h1>
-    
+    </main>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
     <script src="app.js"></script>

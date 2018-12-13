@@ -7,12 +7,14 @@ Item.imgLeftElement = document.getElementById('img-left');
 Item.imgCenterElement = document.getElementById('img-center');
 Item.imgRightElement= document.getElementById('img-right');
 Item.resultsChart = document.getElementById('results-chart');
-Item.voteTable=document.getElementById('tally-box');
+Item.resultList=document.getElementById('results-list');
 
 // store our items in an array
+
 Item.allAltText=[];
 Item.allItems = [];
 Item.totalVotes =[];
+Item.parsedItems = JSON.parse( localStorage.getItem('userResults') );
 
 // constructor function to make item instances
 function Item(filepath, description) {
@@ -20,31 +22,31 @@ function Item(filepath, description) {
   this.altText = description;
   this.numberClicked =0;
   this.numberDisplayed =0;
-  Item.allItems.push(this);
-  Item.allAltText.push(this.altText);
+ 
 }
-// *******************************         Item -instances
-new Item('img/bag.jpg', 'bag');
-new Item('img/banana.jpg', 'banana');
-new Item('img/bathroom.jpg', 'bathroom stand');
-new Item('img/boots.jpg', 'boots');
-new Item('img/breakfast.jpg', 'breakfast');
-new Item('img/bubblegum.jpg', 'bubblegum');
-new Item('img/chair.jpg', 'breakfast');
-new Item('img/cthulhu.jpg', 'cthulhu');
-new Item('img/dog-duck.jpg', 'dog-duck');
-new Item('img/dragon.jpg', 'dragon');
-new Item('img/pen.jpg', 'pen');
-new Item('img/pet-sweep.jpg', 'pet-sweep');
-new Item('img/scissors.jpg', 'scissors');
-new Item('img/shark.jpg', 'shark');
-new Item('img/sweep.png', 'sweep');
-new Item('img/tauntaun.jpg', 'tauntaun');
-new Item('img/unicorn.jpg', 'unicorn');
-new Item('img/water-can.jpg', 'watering-can');
-new Item('img/wine-glass.jpg', 'wine-glass');
-new Item('img/usb.gif', 'usb');
 
+Item.allItems = Item.parsedItems || [
+  new Item('img/bag.jpg', 'bag'),
+  new Item('img/banana.jpg', 'banana'),
+  new Item('img/bathroom.jpg', 'bathroom stand'),
+  new Item('img/boots.jpg', 'boots'),
+  new Item('img/breakfast.jpg', 'breakfast'),
+  new Item('img/bubblegum.jpg', 'bubblegum'),
+  new Item('img/chair.jpg', 'breakfast'),
+  new Item('img/cthulhu.jpg', 'cthulhu'),
+  new Item('img/dog-duck.jpg', 'dog-duck'),
+  new Item('img/dragon.jpg', 'dragon'),
+  new Item('img/pen.jpg', 'pen'),
+  new Item('img/pet-sweep.jpg', 'pet-sweep'),
+  new Item('img/scissors.jpg', 'scissors'),
+  new Item('img/shark.jpg', 'shark'),
+  new Item('img/sweep.png', 'sweep'),
+  new Item('img/tauntaun.jpg', 'tauntaun'),
+  new Item('img/unicorn.jpg', 'unicorn'),
+  new Item('img/water-can.jpg', 'watering-can'),
+  new Item('img/wine-glass.jpg', 'wine-glass'),
+  new Item('img/usb.gif', 'usb'),
+];
 // Generates a random interger  to be used as and index for
 Item.randomNum = function() {
   var random = Math.random() * Item.allItems.length;
@@ -54,11 +56,19 @@ Item.randomNum = function() {
 
 Item.updateVotes =function(){
   for (var i=0; i < Item.allItems.length; i++){
+  
     Item.totalVotes[i]= Item.allItems[i].numberClicked;
-    console.log(i);
+ }
+};
+Item.updateNames= function(){
+  for(var i=0; i<Item.allItems.length; i++){
+    Item.allAltText[i] = Item.allItems[i].altText;
+
   }
 
 };
+Item.updateNames();
+
 Item.dispayArray = function() {
   var newPicturesUsed=0;
   var random1 = Item.randomNum();
@@ -77,19 +87,9 @@ Item.dispayArray = function() {
 //Creating  Table Displayed while clicking
 Item.renderTable= function(){
   for(var i = 0; i < Item.allItems.length; i++){
-    var trElement = document.createElement('tr');
-    var tdElement =document.createElement('td');
-    tdElement.textContent = Item.allItems[i].altText;
-    trElement.appendChild(tdElement);
-    tdElement = document.createElement('td');
-    tdElement.textContent = ( ' was viewed '+Item.allItems[i].numberDisplayed+' times,');
-    trElement.appendChild(tdElement);
-
-    tdElement = document.createElement('td');
-    tdElement.textContent= 'and selected '+ Item.allItems[i].numberClicked + '.';
-    trElement.appendChild(tdElement);
-
-    Item.voteTable.appendChild(trElement);
+    var liElement = document.createElement('li');
+    liElement.textContent = `${Item.allItems[i].altText}-- Viewed:${Item.allItems[i].numberDisplayed}  Selected: ${Item.allItems[i].numberClicked}`;
+    Item.resultList.appendChild(liElement);
 
   }
 };
@@ -122,12 +122,17 @@ Item.render = function(){
   Item.imgRightElement.src=pictureRight.filepath;
   Item.imgRightElement.alt=pictureRight.altText;
   // alert('about render Chart');
-  Item.voteTable.textContent='';
+  Item.resultList.textContent='';
   Item.renderTable();
 
 };
 
-
+Item.endClicks = function(){
+  Item.resultList.textContent='';
+  Item.updateVotes();
+  Item.displayChart();
+  localStorage.setItem('userResults',JSON.stringify(Item.allItems));
+};
 
 Item.clickRight = function(event){ //eslint-disable-line
   var rightIndex=picturesUsed[2];
@@ -136,9 +141,7 @@ Item.clickRight = function(event){ //eslint-disable-line
   if(globalClickCounter<25){
     Item.render();
   }else{
-    Item.voteTable.textContent='';
-    Item.updateVotes();
-    Item.displayChart();
+    Item.endClicks();
   }
 };
 Item.clickLeft = function(event){ //eslint-disable-line
@@ -149,9 +152,7 @@ Item.clickLeft = function(event){ //eslint-disable-line
   if(globalClickCounter<25){
     Item.render();
   }else{
-    Item.voteTable.textContent='';
-    Item.updateVotes();
-    Item.displayChart();
+    Item.endClicks();
   }
 };
 Item.clickCenter = function(event){ //eslint-disable-line
@@ -161,20 +162,19 @@ Item.clickCenter = function(event){ //eslint-disable-line
   if(globalClickCounter<25){
     Item.render();
   }else{
-    
-    Item.voteTable.textContent='';
-    Item.updateVotes();
-    Item.displayChart();
+    Item.endClicks();
   }
 };
-Item.render();
 
-Item.imgRightElement.addEventListener('click', Item.clickRight);
-Item.imgLeftElement.addEventListener('click', Item.clickLeft);
-Item.imgCenterElement.addEventListener('click', Item.clickCenter);
+Item.render();
+Item.results;
+
 
 Item.displayChart = function(){
-  new Chart(Item.resultsChart,{//eslint-disable-line
+  if (Item.results) Item.results.destroy();
+  console.log(Item.totalVotes);
+  console.log(Item.allAltText);
+  Item.results = new Chart(Item.resultsChart,{//eslint-disable-line
     type: 'bar',
     data: {
       labels:Item.allAltText,
@@ -183,18 +183,29 @@ Item.displayChart = function(){
         data:Item.totalVotes,
         backgroundColor:['#145d1c','#92f83b','#a54c3b','#ce9339','#0571e1','#d357af','#e6c940','#4df1ec,','#784268','#6dd448','#1b3b0f','#faeb48','#a37747','#aac25d','#f8ddf5','#fea04a','#EBE616', '#02D7B9', '#BE6AD9', '#78D01F', '#2FCE05'],
         borderColor:[],
-        borderWidth:0
+        borderWidth:0,
       }]
     },
     options:{
       scales:{
         yAxes:[{
           ticks:{
-            stepsize:1,
-            beginAtZero:true
+            stepsize: 1,
+            beginAtZero: true,
+          }
+        }],
+        xAxes:[{
+          ticks:{
+            stepsize: 1,
+            autoskip: false,
+            minRotation: 90,
+            maxRotation: 90,
           }
         }]
       }
     }
   });
 };
+Item.imgRightElement.addEventListener('click', Item.clickRight);
+Item.imgLeftElement.addEventListener('click', Item.clickLeft);
+Item.imgCenterElement.addEventListener('click', Item.clickCenter);
